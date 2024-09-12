@@ -49,7 +49,7 @@ export class TodoComponent implements OnInit {
     this._getTodos();
     this._initChangeForm();
 
-    this.priority  = [
+    this.priority = [
       { "id": "Low", "name": "Low" },
       { "id": "Medium", "name": "Medium" },
       { "id": "High", "name": "High" },
@@ -68,9 +68,9 @@ export class TodoComponent implements OnInit {
       }
     ]
   }
-  
 
-  private _initChangeForm(){
+
+  private _initChangeForm() {
     this.ChangeForm = this.formBuilder.group({
       status: [
         '',
@@ -90,23 +90,73 @@ export class TodoComponent implements OnInit {
       ],
       due_date: [
         '',
-        Validators.required
-
       ],
       priority: [
         '',
-        Validators.required
-
       ],
     });
   }
 
-  
+
 
   showDialog() {
     this.display = true;
     this.editCasedisplay = false;
     this._initTodoForm();
+  }
+
+
+  updateTodo() {
+    this.isSubmitted = true;
+    if (this.TodoForm.invalid) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Enter the required fields',
+      });
+      return;
+    } else {
+      let p
+      if (this.TodoForm.value.priority) {
+        p = this.TodoForm.value.priority
+      } else {
+        p = null
+      }
+      let todo: Todo = {
+        title: this.TodoForm.value.title,
+        due_date: this.datePipe.transform(
+          this.TodoForm.value.due_date,
+          'yyyy-MM-dd'
+        ),
+        priority: p,
+        status: 'Pending'
+      } as Todo;
+
+      this.userService.updateTodo(todo, this.clickedTodo.id).subscribe(
+        () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: `ToDo Updated`,
+          });
+          timer(700)
+            .toPromise()
+            .then(() => {
+              this._getTodos();
+              this.display = false;
+              this.isSubmitted = false;
+              this.TodoForm.reset();
+            });
+        },
+        (error) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: error.error.message,
+          });
+        }
+      );
+    }
   }
 
   addTodo() {
@@ -120,14 +170,19 @@ export class TodoComponent implements OnInit {
       return;
     } else {
 
-      
+      let p
+      if (this.TodoForm.value.priority) {
+        p = this.TodoForm.value.priority
+      } else {
+        p = null
+      }
       let todo: Todo = {
         title: this.TodoForm.value.title,
         due_date: this.datePipe.transform(
           this.TodoForm.value.due_date,
           'yyyy-MM-dd'
         ),
-        priority: this.TodoForm.value.priority,
+        priority: p,
         status: 'Pending'
       } as Todo;
 
@@ -159,19 +214,33 @@ export class TodoComponent implements OnInit {
     }
   }
 
-  changeStatus(todo: any){
-    this.Statusdisplay = true;
-    this.clickedTodo = todo
+  editTodo(todo: any) {
+    this.clickedTodo = todo;
+    this.display = true;
+    this.editCasedisplay = true;
+    this._initTodoForm();
+    this.gettodoform.title.setValue(todo.title);
+    this.gettodoform.priority.setValue(todo.priority);
+    if (todo.due_date) {
+      this.gettodoform.due_date.setValue(new Date(todo.due_date));
+    } 
+
   }
 
-  deleteTranscript(todo: any){
+  changeStatus(todo: any) {
+    this.Statusdisplay = true;
+    this.clickedTodo = todo;
+    this.getChangeStatus.status.setValue(todo.status);
+  }
+
+  deleteTranscript(todo: any) {
     this.clickedTodo = todo
     this.confirmationService.confirm({
       message: `Are you sure you want to delete the ToDo?`,
       header: 'Confirm',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        this.userService.deleteTranscript(todo.id).subscribe(() => {
+        this.userService.deleteTodo(todo.id).subscribe(() => {
           this._getTodos();
           this.messageService.add({
             severity: 'success',
@@ -191,7 +260,7 @@ export class TodoComponent implements OnInit {
     });
   }
 
-  
+
   changeStatusSubmit() {
 
     this.isSubmitted = true;
@@ -204,7 +273,7 @@ export class TodoComponent implements OnInit {
       return;
     } else {
       let status: Status = { status: this.ChangeForm.value.status, } as Status
-      this.userService.updateTranscriptStatus(status, this.clickedTodo.id).subscribe(() => {
+      this.userService.updateTodoStatus(status, this.clickedTodo.id).subscribe(() => {
         this.messageService.add({
           severity: 'success',
           summary: 'Success',

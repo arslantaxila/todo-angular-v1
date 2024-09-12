@@ -35,6 +35,8 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { CheckboxModule } from 'primeng/checkbox';
 import { TodoComponent } from './pages/todo/todo.component';
 import { ProfileComponent } from './pages/profile/profile.component';
+import { TooltipModule } from 'primeng/tooltip';
+
 
 
 @NgModule({
@@ -77,6 +79,7 @@ import { ProfileComponent } from './pages/profile/profile.component';
     OrganizationChartModule,
     MultiSelectModule,
     CheckboxModule,
+    TooltipModule
   ],
   providers: [MessageService, ConfirmationService],
 })

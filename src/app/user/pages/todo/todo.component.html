@@ -24,7 +24,7 @@
                                     [tableStyle]="{ 'min-width': '60rem' }" [rowHover]="true" dataKey="id"
                                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
                                     [globalFilterFields]="[
-                                    'title'
+                                    'title','priority','due_date','status'
                                 ]" [showCurrentPageReport]="true">
                                     <ng-template pTemplate="caption">
                                         <div class="flex">
@@ -44,28 +44,43 @@
                                             </th>
                                             <th>Due Date</th>
                                             <th>Priority</th>
-                                            <th>Status</th>
+                                            <th pSortableColumn="status">Status<p-sortIcon field="status"></p-sortIcon></th>
                                             <th></th>
                                         </tr>
                                     </ng-template>
                                     <ng-template pTemplate="body" let-todo>
-                                        <tr>
+                                        <tr >
                                             <td>{{ todo.title }}</td>
                                             <td>{{
                                                 getDatePipe.transform(
                                                 todo.due_date,
                                                 "dd-MM-yyyy"
                                                 ) }}</td>
-                                            <td>{{ todo.priority }}</td>
-                                            <td>{{ todo.status }}</td>
+                                            <td [ngStyle]="{
+                                                'color': todo.priority === 'High' ? 'red' : (todo.priority === 'Medium' ? 'blue' : 'black'),
+                                                'font-weight': todo.priority === 'High' || todo.priority === 'Medium' ? 'bold' : 'normal'
+                                              }">
+                                                
+                                                
+                                                {{ todo.priority }}</td>
+                                            <td [ngStyle]="{
+                                                'color': todo.status === 'Complete' ? 'green' : (todo.status === 'Inprocess' ? 'blue' : 'black'),
+                                                'font-weight': todo.status === 'Complete' || todo.status === 'Inprocess' ? 'bold' : 'normal'
+                                              }">
+                                                
+                                                {{ todo.status }}</td>
 
                                             <td>
 
-                                                <button pButton pRipple icon="pi pi-pencil"
+                                                <button pButton pRipple icon="pi pi-pencil" 
                                                     class="p-element p-ripple p-button p-component p-button-icon-only p-button-rounded p-button-text mr-2"
-                                                    (click)="changeStatus(todo)"></button>
+                                                    (click)="changeStatus(todo)" pTooltip="Change Status"></button>
 
-                                                <button pButton pRipple icon="pi pi-trash"
+                                                <button pButton pRipple icon="pi pi-file-edit" pTooltip="Edit ToDo"
+                                                    class="p-element p-ripple p-button p-component p-button-icon-only p-button-rounded p-button-text mr-2"
+                                                    (click)="editTodo(todo)"></button>
+
+                                                <button pButton pRipple icon="pi pi-trash" pTooltip="Delete ToDo"
                                                     class="p-element p-ripple p-button p-component p-button-icon-only p-button-rounded p-button-text mr-2"
                                                     (click)="deleteTranscript(todo)"></button>
                                             </td>
@@ -102,23 +117,15 @@
                 </div>
 
                 <div class="col-12 lg:col-6 xl:col-6 mb-3 p-fluid">
-                    <label htmlFor="role">Priority <span style="color: red">*</span></label>
+                    <label htmlFor="role">Priority </label>
                     <p-dropdown id="type" [options]="priority" formControlName="priority" optionLabel="id"
                         optionValue="id" [filter]="true" filterBy="name" [showClear]="true"
                         placeholder="Select a Priority"></p-dropdown>
-                    <small *ngIf="gettodoform['priority'].invalid && isSubmitted" class="p-error"><span
-                            *ngIf="gettodoform['priority'].errors?.required">Type is required</span>
-                    </small>
                 </div>
 
                 <div class="col-12 lg:col-6 xl:col-6 mb-3 p-fluid">
-                    <label htmlFor="due_date">Due Date <span style="color: red">*</span></label>
-                    <p-calendar dateFormat="dd-mm-yy" formControlName="due_date"
-                        appendTo="body"></p-calendar>
-
-                    <small *ngIf="gettodoform['due_date'].invalid && isSubmitted" class="p-error"><span
-                            *ngIf="gettodoform['due_date'].errors?.required">Due Date is required</span>
-                    </small>
+                    <label htmlFor="due_date">Due Date</label>
+                    <p-calendar dateFormat="dd-mm-yy" formControlName="due_date" appendTo="body"></p-calendar>
                 </div>
 
                 <div *ngIf="!editCasedisplay" class="col-12 lg:col-12 xl:col-12"
@@ -127,12 +134,10 @@
                 </div>
 
 
-                <!-- <div *ngIf="editCasedisplay" class=" col-12 lg:col-12 xl:col-12"
-          style="margin-top: 22px; display: flex; justify-content: center; align-items: center;">
-          <p-button label="Update User" styleClass="p-button-primary" (click)="deleteTranscript()"></p-button>
-        </div> -->
-
-
+                <div *ngIf="editCasedisplay" class=" col-12 lg:col-12 xl:col-12"
+                    style="margin-top: 22px; display: flex; justify-content: center; align-items: center;">
+                    <p-button label="Update Todo" styleClass="p-button-primary" (click)="updateTodo()"></p-button>
+                </div>
 
             </div>
         </form>

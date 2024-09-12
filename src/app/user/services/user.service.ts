@@ -26,18 +26,9 @@ export class UserService {
     return this.http.get<[]>(`${this.apiURLTodo}`);
   }
 
-  getMyTranscript(): Observable<any> {
-    return this.http.get<[]>(`${this.apiURLTranscript}/mine`);
-  }
-
   getDashbaordCount(d: any): Observable<any> {
     return this.http.get<[]>(`${this.apiURLTranscript}/dashboardcount/${d}`);
   }
-
-  mygetDashbaordCount(d: any): Observable<any> {
-    return this.http.get<[]>(`${this.apiURLTranscript}/mydashboardcount/${d}`);
-  }
-
   
   viewImage(docName: string): Observable<any> {
     return this.http.get(`${this.apiURLUsers}/images/${docName}`, {
@@ -45,28 +36,23 @@ export class UserService {
     });
   }
 
-  getSemester(): Observable<any> {
-    return this.http.get<[]>(`${this.apiURLSemester}`);
-  }
-
-  getSemesterCourses(semester: number): Observable<any> {
-    return this.http.get<any>(`${this.apiURLSemester}/course/${semester}`);
-  }
-
-  getGrade(): Observable<any> {
-    return this.http.get<[]>(`${this.apiURLTranscript}/grade`);
-  }
-
-  updateTranscriptStatus(status: Status, id: any): Observable<Status> {
+  updateTodo(todo: Todo, id: any): Observable<Todo> {
     return this.http.put<Status>(
-      `${this.apiURLTranscript}/${id}`,
+      `${this.apiURLTodo}/${id}`,
+      todo
+    );
+  }
+
+  updateTodoStatus(status: Status, id: any): Observable<Status> {
+    return this.http.put<Status>(
+      `${this.apiURLTodo}/status/${id}`,
       status
     );
   }
 
-  deleteTranscript(id: any): Observable<any> {
+  deleteTodo(id: any): Observable<any> {
     return this.http.delete<any>(
-      `${this.apiURLTranscript}/${id}`
+      `${this.apiURLTodo}/${id}`
     );
   }
 
@@ -78,11 +64,6 @@ export class UserService {
   addUser(user: User): Observable<User> {
     return this.http.post<User>(`${this.apiURLUsers}/create`, user);
   }
-
-  importfile(formData: FormData): Observable<any> {
-    return this.http.post<any>(`${this.apiURLSemester}/import`, formData);
-  }
-
 
   updateUser(user: User, id: any): Observable<User> {
     return this.http.put<User>(
