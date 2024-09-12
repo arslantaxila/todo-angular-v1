@@ -1,0 +1,55 @@
+<p-toast></p-toast>
+<div class="grid">
+    <div class="col-12 page-layout">
+        <div class="page-inner">
+            <h1 class="text-850 font-bold text-4xl mb-1">Welcome {{ name }}</h1>
+            <h2 class="text-850 font-bold text-2xl mb-1"> {{todayDate}}</h2>
+        </div>
+    </div>
+    </div>
+    <form [formGroup]="UserForm">
+        <div class="col-12 grid mt-3">
+
+
+
+            <div class="col-12 lg:col-3 xl:col-3 mb-3 p-fluid">
+                <label htmlFor="name">Name <span style="color: red">*</span></label>
+                <input formControlName="name" id="name" type="text" pInputText />
+                <small *ngIf="getuserform['name'].invalid && isSubmitted" class="p-error">Name is required</small>
+            </div>
+
+
+            <div class="col-12 lg:col-3 xl:col-3 mb-3 p-fluid">
+                <label htmlFor="email">Email <span style="color: red">*</span></label>
+                <input type="text" id="email" formControlName="email" pInputText />
+                <small *ngIf="getuserform['email'].invalid && isSubmitted" class="p-error"><span
+                        *ngIf="getuserform['email'].errors?.required">Email is required</span>
+                    <span *ngIf="getuserform['email'].errors?.email">Email is invalid</span></small>
+            </div>
+
+
+
+            <div class="col-12 lg:col-3 xl:col-3 mb-3 p-fluid">
+                <label htmlFor="mobile">Password </label>
+                <p-password [toggleMask]="true" id="password" formControlName="password"></p-password>
+                <small *ngIf="getuserform['password'].invalid && isSubmitted" class="p-error">
+                    <span *ngIf="getuserform['password'].errors?.minlength">Password must be at least 8 characters
+                        long</span><span *ngIf="
+                    !getuserform['password'].errors?.minlength &&
+                    getuserform['password'].errors?.pattern
+                  ">Password must contain at least one lowercase letter, one
+                        uppercase letter, one digit and one special
+                        character</span>
+                    <span *ngIf="getuserform['password'].errors?.required">Password is required</span>
+                </small>
+            </div>
+
+            <div class="col-12 lg:col-3 xl:col-3 mb-3 p-fluid" style="margin-top: 22px;"
+               >
+                <p-button label="Update User" styleClass="p-button-primary" (click)="updateUser()"></p-button>
+            </div>
+
+
+
+        </div>
+    </form>

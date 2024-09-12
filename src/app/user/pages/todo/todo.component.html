@@ -1,0 +1,165 @@
+<p-toast></p-toast>
+<p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog>
+<div class="grid">
+    <div class="col-12 page-layout">
+        <div class="page-actions">
+            <p-button (click)="showDialog()" label="Create Todo" icon="pi pi-plus"
+                styleClass="p-button-sm btn-transparent"></p-button>
+        </div>
+
+        <div class="page-inner">
+            <div class="flex justify-content-between align-items-center">
+                <div>
+                </div>
+            </div>
+            <div class="grid mt-5">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="text-white font-bold text-xl mb-0"> ToDo</h5>
+                        </div>
+                        <div class="card-body">
+                            <p-scrollPanel [style]="{ width: '100%', height: '600px' }" styleClass="scroll-color">
+                                <p-table #dt1 [value]="todos" [rows]="10" [paginator]="true"
+                                    [tableStyle]="{ 'min-width': '60rem' }" [rowHover]="true" dataKey="id"
+                                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                                    [globalFilterFields]="[
+                                    'title'
+                                ]" [showCurrentPageReport]="true">
+                                    <ng-template pTemplate="caption">
+                                        <div class="flex">
+                                            <span class="p-input-icon-left ml-auto">
+                                                <i class="pi pi-search"></i>
+                                                <input pInputText #searchInput type="text" (input)="
+                            dt1.filterGlobal(searchInput.value, 'contains')
+                          " placeholder="Search keyword" />
+                                            </span>
+                                        </div>
+                                    </ng-template>
+                                    <ng-template pTemplate="header">
+                                        <tr>
+                                            <th pSortableColumn="title">
+                                                Title
+                                                <p-sortIcon field="title"></p-sortIcon>
+                                            </th>
+                                            <th>Due Date</th>
+                                            <th>Priority</th>
+                                            <th>Status</th>
+                                            <th></th>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-todo>
+                                        <tr>
+                                            <td>{{ todo.title }}</td>
+                                            <td>{{
+                                                getDatePipe.transform(
+                                                todo.due_date,
+                                                "dd-MM-yyyy"
+                                                ) }}</td>
+                                            <td>{{ todo.priority }}</td>
+                                            <td>{{ todo.status }}</td>
+
+                                            <td>
+
+                                                <button pButton pRipple icon="pi pi-pencil"
+                                                    class="p-element p-ripple p-button p-component p-button-icon-only p-button-rounded p-button-text mr-2"
+                                                    (click)="changeStatus(todo)"></button>
+
+                                                <button pButton pRipple icon="pi pi-trash"
+                                                    class="p-element p-ripple p-button p-component p-button-icon-only p-button-rounded p-button-text mr-2"
+                                                    (click)="deleteTranscript(todo)"></button>
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="summary">
+                                        <div class="flex align-items-center justify-content-between">
+                                            In total there are
+                                            {{ todos ? todos.length : 0 }}
+                                            todo's.
+                                        </div>
+                                    </ng-template>
+                                </p-table>
+                            </p-scrollPanel>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <p-dialog header="Todo" [(visible)]="display" [modal]="true" [breakpoints]="{ '960px': '420px' }"
+        [style]="{ width: '60vw', height: '500px' }" [draggable]="false" [resizable]="false">
+        <form [formGroup]="TodoForm">
+            <div class="grid mt-3">
+
+
+                <div class="col-12 lg:col-12 xl:col-12 mb-3 p-fluid">
+                    <label htmlFor="title">Title <span style="color: red">*</span></label>
+                    <input formControlName="title" id="title" type="text" pInputText />
+                    <small *ngIf="gettodoform['title'].invalid && isSubmitted" class="p-error">Title is required</small>
+                </div>
+
+                <div class="col-12 lg:col-6 xl:col-6 mb-3 p-fluid">
+                    <label htmlFor="role">Priority <span style="color: red">*</span></label>
+                    <p-dropdown id="type" [options]="priority" formControlName="priority" optionLabel="id"
+                        optionValue="id" [filter]="true" filterBy="name" [showClear]="true"
+                        placeholder="Select a Priority"></p-dropdown>
+                    <small *ngIf="gettodoform['priority'].invalid && isSubmitted" class="p-error"><span
+                            *ngIf="gettodoform['priority'].errors?.required">Type is required</span>
+                    </small>
+                </div>
+
+                <div class="col-12 lg:col-6 xl:col-6 mb-3 p-fluid">
+                    <label htmlFor="due_date">Due Date <span style="color: red">*</span></label>
+                    <p-calendar dateFormat="dd-mm-yy" formControlName="due_date"
+                        appendTo="body"></p-calendar>
+
+                    <small *ngIf="gettodoform['due_date'].invalid && isSubmitted" class="p-error"><span
+                            *ngIf="gettodoform['due_date'].errors?.required">Due Date is required</span>
+                    </small>
+                </div>
+
+                <div *ngIf="!editCasedisplay" class="col-12 lg:col-12 xl:col-12"
+                    style="margin-top: 22px; display: flex; justify-content: center; align-items: center;">
+                    <p-button label="Submit" styleClass="p-button-primary" (click)="addTodo()"></p-button>
+                </div>
+
+
+                <!-- <div *ngIf="editCasedisplay" class=" col-12 lg:col-12 xl:col-12"
+          style="margin-top: 22px; display: flex; justify-content: center; align-items: center;">
+          <p-button label="Update User" styleClass="p-button-primary" (click)="deleteTranscript()"></p-button>
+        </div> -->
+
+
+
+            </div>
+        </form>
+
+    </p-dialog>
+</div>
+
+
+<p-dialog header="Change Status" [(visible)]="Statusdisplay" [modal]="true" [breakpoints]="{ '960px': '420px' }"
+    [style]="{ width: '60vw', height: '400px' }" [draggable]="false" [resizable]="false">
+    <form [formGroup]="ChangeForm">
+        <div class="grid mt-3">
+
+            <div class="col-12 lg:col-6 xl:col-6 mb-3 p-fluid">
+                <label htmlFor="name">Status <span style="color: red">*</span></label>
+                <p-dropdown id="status" [options]="status" formControlName="status" optionLabel="name" optionValue="id"
+                    [filter]="true" filterBy="name" [showClear]="true" placeholder="Select a Status">
+                </p-dropdown>
+                <small *ngIf="getChangeStatus['status'].invalid && isSubmitted" class="p-error">Status is
+                    required</small>
+            </div>
+            <div class="col-12 lg:col-6 xl:col-6 mb-3 p-fluid" style="margin-top: 22px">
+                <p-button label="Change Status" styleClass="p-button-primary" (click)="changeStatusSubmit()"></p-button>
+            </div>
+        </div>
+    </form>
+
+
+
+</p-dialog>

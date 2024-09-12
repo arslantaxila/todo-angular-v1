@@ -1,0 +1,58 @@
+<p-toast></p-toast>
+<div class="grid">
+  <div class="col-12 page-layout">
+    <div class="page-inner">
+      <h1 class="text-850 font-bold text-4xl mb-1">Welcome {{ name }}</h1>
+      <h2 class="text-850 font-bold text-2xl mb-1"> {{todayDate}}</h2>
+    </div>
+  </div>
+
+  <div class="col-12 md:col-3 lg:col-3 ml-1" >
+    <div class="card" style="background-color: rgb(7, 155, 9); border: 0px;">
+      <div class="card-body" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
+        <h5 class="text-white font-bold text-xl mb-0">Today's Transcript Request</h5>
+        <h5 class="text-white font-bold text-xl mb-0">{{todaytranscript}}</h5>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 md:col-3 lg:col-3 ml-1" >
+    <div class="card" style="background-color: rgb(205, 77, 8); border: 0px;">
+      <div class="card-body" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
+        <h5 class="text-white font-bold text-xl mb-0">Pending Transcript Request</h5>
+        <h5 class="text-white font-bold text-xl mb-0">{{pendingtranscript}}</h5>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="col-12 md:col-3 lg:col-3 ml-1">
+    <div class="card" style="background-color: rgb(149, 4, 4); border: 0px;">
+      <div class="card-body" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
+        <h5 class="text-white font-bold text-xl mb-0">Underprocess Transcript Request</h5>
+        <h5 class="text-white font-bold text-xl mb-0">{{underprocesstranscript}}</h5>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="col-12 md:col-3 lg:col-3 ml-1">
+    <div class="card" style="background-color: rgb(248, 244, 1); border: 0px;">
+      <div class="card-body" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
+        <h5 class="text-white font-bold text-xl mb-0"> Ready to Collect Transcript </h5>
+        <h5 class="text-white font-bold text-xl mb-0">{{readytocollect}}</h5>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="col-12 md:col-3 lg:col-3 ml-1">
+    <div class="card" style="background-color: rgb(50, 13, 234); border: 0px;">
+      <div class="card-body" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
+        <h5 class="text-white font-bold text-xl mb-0"> Closed Transcript Request </h5>
+        <h5 class="text-white font-bold text-xl mb-0">{{closedtranscript}}</h5>
+      </div>
+    </div>
+  </div>
+
+</div>
