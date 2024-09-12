@@ -17,8 +17,6 @@ import {
 export class UserService {
   apiURLUsers = environment.apiURL + 'user';
   apiURLTodo = environment.apiURL + 'todo';
-  apiURLTranscript = environment.apiURL + 'transcript';
-  apiURLSemester = environment.apiURL + 'semester';
 
   constructor(private http: HttpClient, private router: Router) { }
 
@@ -27,7 +25,7 @@ export class UserService {
   }
 
   getDashbaordCount(d: any): Observable<any> {
-    return this.http.get<[]>(`${this.apiURLTranscript}/dashboardcount/${d}`);
+    return this.http.get<[]>(`${this.apiURLTodo}/dashboardcount/${d}`);
   }
   
   viewImage(docName: string): Observable<any> {
@@ -69,12 +67,6 @@ export class UserService {
     return this.http.put<User>(
       `${this.apiURLUsers}/${id}`,
       user
-    );
-  }
-
-  downloadAttachment(): Observable<any> {
-    return this.http.get(`${this.apiURLSemester}/getDocument`,
-      { responseType: 'blob' }
     );
   }
   
